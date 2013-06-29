@@ -42,9 +42,11 @@ Quick start for Windows OS users
 
 Installing
 ----------
-###MacOS or Linux OS
 You need to install this on a web server, otherwise it won't be able
-to open the presentation.md file via AJAX. So, if you're on a Mac,
+to open the presentation.md file via AJAX.
+
+###MacOS or Linux OS
+So, if you're on a Mac,
 copy it to your `~/Sites/MyPresentation` folder. Then open your web
 browser to http://localhost/~myusername/MyPresentation/Presenter.html.
 
