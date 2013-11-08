@@ -34,14 +34,23 @@ You can jump to the any slide which you want to show directly by 3 ways as follo
 
 Quick start for Windows OS users
 ----------
-1. Download zip ball from [here](https://github.com/jsakamoto/MarkdownPresenter/archive/master.zip).
-1. Unblock download flag of the zip file from the property window in Windows Explorer.
-1. Extract the zip file ino any folder, then ```start-presenter-for-windows.bat``` appear in that folder.
-1. Double click ```start-presenter-for-windows.bat```, then the default web browser is launched and open the presentation automatically.
-1. You can edit and save```presentation.md``` by any text editor, and reloead presentation by hit space key.
+Open a command prompt and paste the text from below and press enter.
+
+    @powershell -nop -ex unrestricted -c "iex ((new-object net.webclient).DownloadString('http://goo.gl/2JUSZU'))"
+
+Then begin the download all files to needed into current directory.  
+And after complete all downloads, mini http server is start automatically and open "Markdown Presenter" view by default browser.
+
+You can edit and save ```presentation.md``` by any text editor, and reloead presentation by hit space key.
+
 
 Installing
 ----------
+
+At first, download zip ball from [here](https://github.com/jsakamoto/MarkdownPresenter/archive/master.zip), and extract the zip file.
+
+> **Notice** If you use Windows OS, then unblock download flag of the zip file before extract it from the property window in Windows Explorer.
+
 You need to install this on a web server, otherwise it won't be able
 to open the presentation.md file via AJAX.
 
@@ -56,9 +65,10 @@ its built-in web server in this directory by running `python -m SimpleHTTPServer
 ###Windows OS
 
 ####Tiny web server which is bundled with Markdown Presenter
-You can use tiny web server writen by Windows PowerShell script which is bundled with Markdown Presenter source code.
+You can use tiny web server 'httpd.ps1' writen by Windows PowerShell script which is bundled with Markdown Presenter source code.
 
-See the chapter "Quick start for Windows OS users" for details.
+After extract zip ball, there is a ```start-presenter-for-windows.bat```.  
+Double click it, then mini http server 'httpd.ps1' is start and open the presentation by default web browser automatically.
 
 ####IIS or IIS express
 If you use [IIS](http://www.iis.net/) or [IIS express](http://www.iis.net/learn/extensions/introduction-to-iis-express/iis-express-overview) copy all the MarkdownPresenter files to the webfolder (normally `C:\Inetpub\wwwroot\<SiteFolder>` on IIS and `C:\Users\<User>\Documents\My Web Sites\<WebSite>` on IIS express). 
