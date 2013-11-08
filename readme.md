@@ -43,6 +43,8 @@ And after complete all downloads, mini http server is start automatically and op
 
 You can edit and save ```presentation.md``` by any text editor, and reloead presentation by hit space key.
 
+Look YouTube video:
+[http://youtu.be/XxVSwx4ZhOk](http://youtu.be/XxVSwx4ZhOk)
 
 Installing
 ----------
