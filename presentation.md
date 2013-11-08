@@ -1,102 +1,47 @@
-Apps 
-===
-Lots of people have been asking stuff...
+## Welcome to **Markdown Presenter**!
+
+- Update "presentation.md" by any text editor which you prefer.
+ - to separate slides insert a paragraph with an exclamation mark.
+- Hit space key at this browser to rapid reload.
+  - F5 or Ctrl+R reload work well too.
 
 !
 
-My story
-===
-* Wasted +1yr on first app
-* First few failed
-* Since then churn out simple ones
-* Been focused a few months maybe?
-* 7 or 8 apps now
+## Moving between slides
+
+- Left/Right arrow key to change slide.
+- Swipe left/right on touch device to change slide.
 
 !
 
-Sales
-===
-* Money's kinda useful
-* Average $70/day
-* Soon to be $100 with voda app
-* Thats 36k...
-* I want a boat
+## Jump to the page
+- 0~9 keys and enter to direct page jump like a PowerPoint.
 
 !
 
-Coding
-===
-* Obj-C is nice
-* Think of it like a VERY simple layer of OO on top of C
-* Much simpler than C++
-* Like JS with C syntax
+## Page transition effect
+
+- 'e','f' key combination to enable fade effect at changing slide.
+- 'e','n' to disable the effect.
 
 !
 
-Time and Motivation
-===
-* I spend a few hours a week on it
-* Motivated by family/house
-* Dont be scared to give it a go
+## Printable
+
+- You can print out this presentation from PC browser.
+- The recomended configuration:
+ - Layout - Landscape
+ - Margins - No margin
+ - Options - Enable to printing background colors
 
 !
 
-Support
-===
-* I have my email in most apps
-* Get maybe one a day?
-* Everyone is friendly
-* I gave one refund
+## Share your slides
+
+- If you print out the presentation as a PDF file, then you can upload it to "slideshare.com".
 
 !
 
-Fail forwards
-===
-* Most apps fail
-* < $5 / week = fail
-* So: Make lots of small apps
-* Build on what works eg usage
-* Remember rovio made 51 apps before angry birds.
+# Be happy! :)
 
-!
-
-Ideas
-===
-* Start with crummy ideas. Thats better than nothing.
-* If it's 'obvious' to you, then its probably useful to someone.
-* Execution > ideas anyway.
-
-!
-
-Marketing
-===
-* Tried free for a week - fail (800 -> 0)
-* I have websites for my apps - nothing
-* Tried $2 - nothing, except usage apps
-* Now I just plonk them on at $1 or $2 and leave it
-* Haven't tried adwords
-
-!
-
-Nuts n bolts
-===
-* Reviews take 2 weeks
-* Apple takes 30%
-* GST is 10%
-* Marginal tax will take 37% of what remains
-* Put it in the wife's name!
-* Ads in apps make nothing
-
-!
-
-Ideas
----
-* Pair up, make two apps, one in each name to make revenue split simple
-* Android - never touched. Get in the ground floor on tablets?
-* Scratch your own itch - make a very simple app
-
-!
-
-Whats stopping you?
----
-Any questions?
+> _Rather than fighting with keynote or powerpoint **for hours**, I can whip up a presentation in minutes using markdown._
