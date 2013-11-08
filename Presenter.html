@@ -288,7 +288,7 @@ $(function () {
     var startPos = null;
     var isPointerTypeTouch = function (e) {
         if ('pointerType' in e.originalEvent)
-            return (e.originalEvent.pointerType === e.originalEvent.MSPOINTER_TYPE_TOUCH);
+            return (e.originalEvent.pointerType == 'touch');
         else true;
     };
     var getPos = function (e) {
@@ -324,9 +324,17 @@ $(function () {
 
     $(document.body)
         .bind({
+            // IE10
             'MSPointerDown': ontouchstart,
             'MSPointerMove': ontouchmove,
             'MSPointerUp': ontouchend,
+            
+            // IE11+
+            'pointerdown': ontouchstart,
+            'pointermove': ontouchmove,
+            'pointerup': ontouchend,
+            
+            // Webkit, Gecko
             'touchstart': ontouchstart,
             'touchmove': ontouchmove,
             'touchend': ontouchend,
