@@ -26,7 +26,7 @@ os.remove(zippath)
 # after one shot timer to wait for warming up HTTP daemon.
 def launch():
   time.sleep(1)
-  webbrowser.open("http://localhost:8000/presenter.html")
+  webbrowser.open("http://localhost:8000/Presenter.html")
 
 thread.start_new_thread(launch, ())
 
