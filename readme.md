@@ -46,7 +46,18 @@ You can edit and save ```presentation.md``` by any text editor, and reloead pres
 Look YouTube video:
 [http://youtu.be/XxVSwx4ZhOk](http://youtu.be/XxVSwx4ZhOk)
 
-Installing
+Quick start for MacOS or Linux users
+----------
+Open a terminal and paste the text from below and press enter.
+
+    python -c "import urllib2;exec(urllib2.urlopen('http://goo.gl/ncwVU2').read())"
+
+Then begin the download all files to needed into current directory.  
+And after complete all downloads, mini http server is start automatically and open "Markdown Presenter" view by default browser.
+
+You can edit and save ```presentation.md``` by any text editor, and reloead presentation by hit space key.
+
+Manual Installing
 ----------
 
 At first, download zip ball from [here](https://github.com/jsakamoto/MarkdownPresenter/archive/master.zip), and extract the zip file.
