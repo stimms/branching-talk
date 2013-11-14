@@ -46,13 +46,9 @@ You can edit and save ```presentation.md``` by any text editor, and reloead pres
 Look YouTube video:
 [http://youtu.be/XxVSwx4ZhOk](http://youtu.be/XxVSwx4ZhOk)
 
-Quick start for MacOS or Linux users
+Quick start for MacOS or Linux OS users
 ----------
 Open a terminal and paste the text from below and press enter.
-
-    python -c "import urllib2;exec(urllib2.urlopen('http://goo.gl/ncwVU2').read())"
-    
-Or if you have curl in your system:
 
     curl -L http://goo.gl/ncwVU2|python
 
