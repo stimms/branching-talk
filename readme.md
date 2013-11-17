@@ -50,7 +50,7 @@ Quick start for MacOS or Linux OS users
 ----------
 Open a terminal and paste the text from below and press enter.
 
-    curl -L http://goo.gl/ncwVU2|python
+    python -c "import urllib2;exec(urllib2.urlopen('http://goo.gl/ncwVU2').read())"
 
 Then begin the download all files to needed into current directory.  
 And after complete all downloads, mini http server is start automatically and open "Markdown Presenter" view by default browser.
