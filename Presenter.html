@@ -22,9 +22,15 @@
     position: fixed;
     bottom: 1em;
     right: 2px;
-    height:1.3em;
+    height:1.5em;
     width:8em;
     overflow:hidden;
+  }
+   .slideProgress
+  {
+    background-color: green;
+    width: 100%;
+    min-height: 10px;
   }
   .slideCount select {
     color:white;
@@ -122,6 +128,7 @@ if (!window.jQuery) {
 <div class="slideCount">
   <select tabindex="-1">
   </select>
+  <div class="slideProgress"></div>
 </div>
 
   <div class="padding">
@@ -181,6 +188,7 @@ Present.showSlide = function(slide) {
   }, this));
 
   $('.slideCount select').val(this.currentSlide);
+  $('.slideProgress').css("width", (this.currentSlide + 1)/this.slides.length * 100 + "%");
   window.location.hash = '#' + (Present.currentSlide + 1);
 };
 Present.nextSlide = function() {
