@@ -50,7 +50,7 @@ Quick start for MacOS or Linux OS users
 ----------
 Open a terminal and paste the text from below and press enter.
 
-    python -c "import urllib.request;exec(urllib.request.urlopen('http://goo.gl/ncwVU2').read())"
+    python -c "exec('try:import urllib2 as m\nexcept:import urllib.request as m');exec(m.urlopen('http://goo.gl/ncwVU2').read())"
 
 Then begin the download all files to needed into current directory.  
 And after complete all downloads, mini http server is start automatically and open "Markdown Presenter" view by default browser.
@@ -73,7 +73,9 @@ copy it to your `~/Sites/MyPresentation` folder. Then open your web
 browser to http://localhost/~myusername/MyPresentation/Presenter.html.
 
 On Linux or Mac you have also likely Python installed and can start
-its built-in web server in this directory by running `python -m http.server`.
+its built-in web server in this directory by running bellow:
+
+    python -c "exec('try:import SimpleHTTPServer as m\nexcept:import http.server as m');m.test(HandlerClass=m.SimpleHTTPRequestHandler)"
 
 ###Windows OS
 
