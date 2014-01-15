@@ -1,8 +1,13 @@
 import webbrowser
-import SimpleHTTPServer
-import thread
+try:
+    import SimpleHTTPServer
+    import thread
+    import urllib
+except:
+    import http.server as SimpleHTTPServer
+    import _thread as thread
+    import urllib.request as urllib
 import time
-import urllib
 from zipfile import ZipFile
 import os
 
@@ -25,10 +30,10 @@ os.remove(zippath)
 # launch default web browser to open Markdown Presenter
 # after one shot timer to wait for warming up HTTP daemon.
 def launch():
-  time.sleep(1)
-  webbrowser.open("http://localhost:8000/Presenter.html")
+    time.sleep(1)
+    webbrowser.open("http://localhost:8000/Presenter.html")
 
 thread.start_new_thread(launch, ())
 
 # start mini HTTP daemon.
-SimpleHTTPServer.test()
+SimpleHTTPServer.test(HandlerClass=SimpleHTTPServer.SimpleHTTPRequestHandler)
