@@ -1,9 +1,13 @@
 #!/usr/bin/env python
 
-import SimpleHTTPServer
-import thread
-import time
 import webbrowser
+import time
+try:
+  import SimpleHTTPServer
+  import thread
+except:
+  import http.server as SimpleHTTPServer
+  import _thread as thread
 
 def launch():
   time.sleep(1)
@@ -12,4 +16,4 @@ def launch():
 thread.start_new_thread(launch, ())
 
 # start mini HTTP daemon.
-SimpleHTTPServer.test()
+SimpleHTTPServer.test(HandlerClass=SimpleHTTPServer.SimpleHTTPRequestHandler)
