@@ -1,30 +1,48 @@
-﻿param($Root=".", $Port=8080, $HostName="localhost")
+﻿
+param(
+	[Parameter()]$Root = '.',
+	$Port = 8080,
+	$HostName = 'localhost'
+)
 
-pushd $Root
-$Root = pwd
+$ErrorActionPreference = 'Stop'
+
+$Root = $PSCmdlet.GetUnresolvedProviderPathFromPSPath($Root)
+if (![System.IO.Directory]::Exists($Root)) {Write-Error "Missing directory '$Root'."}
+
+$Here = Split-Path $MyInvocation.MyCommand.Path -Parent
 
 $listener = New-Object System.Net.HttpListener
-$listener.Prefixes.Add("http://$HostName`:$Port/")
+$listener.Prefixes.Add("http://${HostName}:${Port}/")
 $listener.Start()
 
-echo ("Start {0} at `"$Root`"" -f ($listener.Prefixes | select -f 1))
-echo "Enter Ctrl + C to stop."
+Write-Output ("Start {0} at '$Root'" -f ($listener.Prefixes | Select-Object -First 1))
+Write-Output 'Enter Ctrl-Break to stop.'
 
-while ($true) {
-    $context = $listener.GetContext()
+for() {
+	$context = $listener.GetContext()
+	$url = $context.Request.Url.LocalPath.TrimStart('/')
+	Write-Output "Getting $url"
 
-    $url = $context.Request.Url.LocalPath.TrimStart('/')
-    $res = $context.Response
-    $path = Join-Path $Root ($url -replace "/","\")
-    echo $path
+	$res = $context.Response
+	try {
+		# first try root
+		$path = Join-Path $Root $url
+		if (![System.IO.File]::Exists($path)) {
+			# second try here
+			$path = Join-Path $Here $url
+			if (![System.IO.File]::Exists($path)) {
+				Write-Output "Missing $url"
+				$res.StatusCode = 404
+				continue
+			}
+		}
 
-    if ((Test-Path $path -PathType Leaf) -eq $true) {
-        $content = [IO.File]::ReadAllBytes($path)
-        $res.OutputStream.Write($content, 0, $content.Length)
-    }
-    else {
-        $res.StatusCode = 404
-    }
-    $res.Close()
+		Write-Output "Reading $path"
+		$content = [IO.File]::ReadAllBytes($path)
+		$res.OutputStream.Write($content, 0, $content.Length)
+	}
+	finally {
+		$res.Close()
+	}
 }
-
