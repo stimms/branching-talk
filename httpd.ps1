@@ -1,24 +1,24 @@
 ﻿
+[CmdletBinding()]
 param(
-    [Parameter()]$Root = '.',
-    $Port = 8080,
-    $HostName = 'localhost'
+    [string]$Root = '.',
+    [int]$Port = 8080,
+    [string]$HostName = 'localhost'
 )
 
 $ErrorActionPreference = 'Stop'
 
+$Here = Split-Path $MyInvocation.MyCommand.Path
 $Root = $PSCmdlet.GetUnresolvedProviderPathFromPSPath($Root)
 if (![System.IO.Directory]::Exists($Root)) {Write-Error "Missing directory '$Root'."}
 
-$Here = Split-Path $MyInvocation.MyCommand.Path -Parent
-
 $listener = New-Object System.Net.HttpListener
 $listener.Prefixes.Add("http://${HostName}:${Port}/")
+
+Write-Output "Start $(@($listener.Prefixes)[0]) at $Root"
 $listener.Start()
 
-Write-Output ("Start {0} at '$Root'" -f ($listener.Prefixes | Select-Object -First 1))
 Write-Output 'Enter Ctrl-Break to stop.'
-
 for() {
     $context = $listener.GetContext()
     $url = $context.Request.Url.LocalPath.TrimStart('/')
