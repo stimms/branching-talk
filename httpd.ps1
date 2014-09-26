@@ -1,30 +1,48 @@
-﻿param($Root=".", $Port=8080, $HostName="localhost")
+﻿
+[CmdletBinding()]
+param(
+    [string]$Root = '.',
+    [int]$Port = 8080,
+    [string]$HostName = 'localhost'
+)
 
-pushd $Root
-$Root = pwd
+$ErrorActionPreference = 'Stop'
+
+$Here = Split-Path $MyInvocation.MyCommand.Path
+$Root = $PSCmdlet.GetUnresolvedProviderPathFromPSPath($Root)
+if (![System.IO.Directory]::Exists($Root)) {Write-Error "Missing directory '$Root'."}
 
 $listener = New-Object System.Net.HttpListener
-$listener.Prefixes.Add("http://$HostName`:$Port/")
+$listener.Prefixes.Add("http://${HostName}:${Port}/")
+
+Write-Output "Start $(@($listener.Prefixes)[0]) at $Root"
 $listener.Start()
 
-echo ("Start {0} at `"$Root`"" -f ($listener.Prefixes | select -f 1))
-echo "Enter Ctrl + C to stop."
-
-while ($true) {
+Write-Output 'Enter Ctrl-Break to stop.'
+for() {
     $context = $listener.GetContext()
-
     $url = $context.Request.Url.LocalPath.TrimStart('/')
-    $res = $context.Response
-    $path = Join-Path $Root ($url -replace "/","\")
-    echo $path
+    Write-Output "Getting $url"
 
-    if ((Test-Path $path -PathType Leaf) -eq $true) {
+    $res = $context.Response
+    try {
+        # first try root
+        $path = Join-Path $Root $url
+        if (![System.IO.File]::Exists($path)) {
+            # second try here
+            $path = Join-Path $Here $url
+            if (![System.IO.File]::Exists($path)) {
+                Write-Output "Missing $url"
+                $res.StatusCode = 404
+                continue
+            }
+        }
+
+        Write-Output "Reading $path"
         $content = [IO.File]::ReadAllBytes($path)
         $res.OutputStream.Write($content, 0, $content.Length)
     }
-    else {
-        $res.StatusCode = 404
+    finally {
+        $res.Close()
     }
-    $res.Close()
 }
-
