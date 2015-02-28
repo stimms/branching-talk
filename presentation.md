@@ -159,9 +159,110 @@
 
 ## Features branches (no real naming scheme)
 
--
+- Primary places for work
+- Shared by a team
+- With DVCs there may be additional structure on top of it
+
+!
+
+## What do we build?
+
+- Everything!
+- Development, master and release if your are poor
+
+!
+
+## Variants
+
+- Put hot fixes directly into master
+- Freeze develop as we approach release and don't have release branches (small teams)
+
+!
 
 ## Github Flow
+
+- Used by many OpenSource projects on github
+- Lightweight, but easy to break things
+
+!
+
+## Where to use
+- Good for continual release-style projects
+- Smaller development teams
+- Well architected, siloed code
+- Need to rapidly release features
+
+!
+
+## Master
+
+- Golden
+- Always ready to release
+- May, occasionally, be tagged with version numbers
+
+!
+
+## Features branches
+- Short lived
+- Self-stablized, fixes happen in that branch and not in a release branch
+
+!
+
+## What do we build?
+
+- Everything
+
+!
+
+## Variants
+
+- Multiple masters for major releases
+- Development branch for stabilization
+
+!
+
+## Hydra
+- Sounds cool
+- Useful for libraries or components used in other systems
+- Supports multiple concurrent releases
+
+!
+
+## Version master (8.0_master)
+
+- The master branch for a specific version
+- Merge into only
+
+!
+
+## Patch branch
+
+- Contains a number of fixes to be applied to a master
+- Released as a collection of binaries
+- Strongly related to a version master
+
+!
+
+## Fix branches
+
+- Contains fixes for issues
+- No new features
+- Merged to multiple places
+
+!
+
+## Features branches
+
+- Contain net-new features
+- Likely not merged into patches
+- Merged into a single version master
+
+!
+
+## Variations
+
+- Development branch for unknown version numbers
+- Hotfix branches
 
 !
 
@@ -185,3 +286,10 @@ I've got feature flags
 - Source control adoption https://www.openhub.net/repositories/compare http://eclipse.dzone.com/articles/eclipse-community-survey-2014
 - Inter-File Branching https://classes.soe.ucsc.edu/cmps290g/Fall03/summary/InterFileBranchingSummary.pdf
 - Git Flow http://nvie.com/posts/a-successful-git-branching-model/
+
+!
+
+# References
+
+- GitHub Flow https://guides.github.com/introduction/flow/
+- Comparison of revision control software http://en.wikipedia.org/wiki/Comparison_of_revision_control_software
