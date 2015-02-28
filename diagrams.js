@@ -27,8 +27,50 @@ var BranchChart = (function () {
 
         var branchColourScale = d3.scale.category10().domain(data.branches);
 
+        this.createEdges(chart, xScale, yScale, data);
         this.createBranches(chart, yScale, data);
         this.createCommits(chart, yScale, xScale, branchColourScale, data);
+      },
+      writable: true,
+      configurable: true
+    },
+    createEdges: {
+      value: function createEdges(chart, xScale, yScale, data) {
+        var edges = chart.selectAll(".edge").data(data.commits);
+        edges.enter().append("line").attr("class", "edge").attr("y1", function (commit) {
+          return yScale(commit.branch);
+        }).attr("x1", function (commit) {
+          return xScale(commit.time);
+        }).attr("x2", function (commit) {
+          if (commit.time == d3.max(data.commits.filter(function (c) {
+            return c.branch == commit.branch;
+          }), function (c) {
+            return c.time;
+          })) return xScale(commit.time);
+          return xScale(d3.min(data.commits.filter(function (c) {
+            return c.branch == commit.branch && c.time > commit.time;
+          }), function (c) {
+            return c.time;
+          }));
+        }).attr("y2", function (commit) {
+          return yScale(commit.branch);
+        });
+        var mergeEdges = chart.selectAll(".merge-edge").data(data.commits.filter(function (c) {
+          return c.mergeTo !== undefined;
+        }));
+        mergeEdges.enter().append("line").attr("class", "edge merge-edge").attr("y1", function (commit) {
+          return yScale(commit.branch);
+        }).attr("x1", function (commit) {
+          return xScale(commit.time);
+        }).attr("x2", function (commit) {
+          return xScale(d3.min(data.commits.filter(function (c) {
+            return c.time > commit.time;
+          }), function (c) {
+            return c.time;
+          }));
+        }).attr("y2", function (commit) {
+          return yScale(commit.mergeTo);
+        });
       },
       writable: true,
       configurable: true
@@ -72,7 +114,8 @@ chart.init({
   commits: [{
     branch: "master",
     time: 0,
-    comment: "some comment"
+    comment: "some comment",
+    mergeTo: "develop"
   }, {
     branch: "master",
     time: 4,
@@ -85,8 +128,7 @@ chart.init({
   }, {
     branch: "develop",
     time: 2,
-    comment: "some comment",
-    mergeTo: "master"
+    comment: "some comment"
   }, {
     branch: "develop",
     time: 3,

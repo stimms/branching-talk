@@ -21,10 +21,38 @@ class BranchChart{
 
     var branchColourScale = d3.scale.category10().domain(data.branches);
 
+    this.createEdges(chart, xScale, yScale, data);
     this.createBranches(chart, yScale, data);
     this.createCommits(chart, yScale, xScale, branchColourScale, data);
 
 
+
+
+  }
+
+  createEdges(chart, xScale, yScale, data){
+    var edges = chart.selectAll(".edge").data(data.commits);
+    edges.enter()
+          .append("line")
+          .attr("class", "edge")
+          .attr("y1", (commit) => yScale(commit.branch))
+          .attr("x1", (commit) => xScale(commit.time))
+          .attr("x2", (commit) => {
+            if(commit.time == d3.max(data.commits.filter((c)=>c.branch == commit.branch), (c) => c.time))
+              return xScale(commit.time);
+            return xScale(d3.min(data.commits.filter((c)=>c.branch == commit.branch && c.time > commit.time), (c) => c.time));
+          })
+          .attr("y2", (commit) => yScale(commit.branch));
+    var mergeEdges = chart.selectAll(".merge-edge").data(data.commits.filter((c)=> c.mergeTo !== undefined));
+    mergeEdges.enter()
+          .append("line")
+          .attr("class", "edge merge-edge")
+          .attr("y1", (commit) => yScale(commit.branch))
+          .attr("x1", (commit) => xScale(commit.time))
+          .attr("x2", (commit) => {
+            return xScale(d3.min(data.commits.filter((c)=>c.time > commit.time), (c) => c.time));
+          })
+          .attr("y2", (commit) => yScale(commit.mergeTo));
 
   }
 
@@ -61,7 +89,8 @@ chart.init(
     {
       branch: "master",
       time: 0,
-      comment: "some comment"
+      comment: "some comment",
+      mergeTo: "develop"
     },
     {
       branch: "master",
@@ -77,8 +106,7 @@ chart.init(
       {
         branch: "develop",
         time: 2,
-        comment: "some comment",
-        mergeTo: "master"
+        comment: "some comment"
       },
       {
         branch: "develop",
