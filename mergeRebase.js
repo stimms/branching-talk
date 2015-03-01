@@ -22,19 +22,19 @@ var MergeRebase = (function () {
           }, {
             branch: "master",
             time: 4,
-            comment: "some comment"
+            comment: "merge from develop"
           }, {
             branch: "develop",
             time: 1,
-            comment: "some comment"
+            comment: "add feature"
           }, {
             branch: "develop",
             time: 2,
-            comment: "some comment"
+            comment: "stabilize"
           }, {
             branch: "develop",
             time: 3,
-            comment: "some comment",
+            comment: "stabilize",
             mergeTo: "master"
           }]
         };

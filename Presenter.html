@@ -1,4 +1,7 @@
+<meta charset="utf-8">
 <html>
+<meta http-equiv="content-type" content="text/html; charset=UTF8">
+<meta charset="UTF8">
 <head>
 <meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,maximum-scale=1" />
 <title>Markdown Presenter</title>
@@ -11,6 +14,13 @@
 .edge{
   stroke: black;
   stroke-width: 4px;
+}
+.commit-box{
+  opacity: .3;
+  fill: black;
+}
+.commit-label{
+  font-size: 12px
 }
   svg>text{
     font-size: 18px;
@@ -119,7 +129,7 @@
    }
  /* End styling */
 </style>
-<script src="bower_components/d3/d3.js" ></script>
+<script src="bower_components/d3/d3.js" charset="utf-8"></script>
 <script src="bower_components/jquery/dist/jquery.js" ></script>
 <script>
 if (!window.jQuery) {

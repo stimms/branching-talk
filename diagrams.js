@@ -21,7 +21,7 @@ var BranchChart = (function () {
 
         this.yScale = d3.scale.ordinal().domain(data.branches.map(function (d) {
           return d.title;
-        })).rangeBands([20, Math.min(this.height, data.branches.length * 120)], 0.1);
+        })).rangeBands([50, Math.min(this.height, data.branches.length * 130)], 0.1);
 
         this.xScale = d3.scale.linear().domain([0, d3.max(data.commits, function (x) {
           return x.time;
@@ -137,6 +137,28 @@ var BranchChart = (function () {
           return _this.xScale(commit.time);
         }).attr("r", this.radius).attr("fill", function (commit) {
           return _this.branchColourScale(commit.branch);
+        });
+
+        var commitBox = this.chart.selectAll(".commit-box").data(data.commits);
+        commitBox.exit().remove();
+        commitBox.enter().append("rect").attr("class", "commit-box");
+        commitBox.transition().attr("y", function (commit) {
+          return _this.yScale(commit.branch) - _this.radius - 43;
+        }).attr("x", function (commit) {
+          return _this.xScale(commit.time) - 75;
+        }).attr("width", function (commit) {
+          return commit.comment === undefined ? 0 : 150;
+        }).attr("height", 40);
+
+        var commitLabels = this.chart.selectAll(".commit-label").data(data.commits);
+        commitLabels.exit().remove();
+        commitLabels.enter().append("text").attr("class", "commit-label");
+        commitLabels.transition().attr("y", function (commit) {
+          return _this.yScale(commit.branch) - _this.radius - 13;
+        }).attr("x", function (commit) {
+          return _this.xScale(commit.time);
+        }).attr("text-anchor", "middle").text(function (commit) {
+          return commit.comment;
         });
       },
       writable: true,

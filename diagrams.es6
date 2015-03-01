@@ -13,7 +13,7 @@ class BranchChart{
 
     this.yScale = d3.scale.ordinal()
                   .domain(data.branches.map((d)=>d.title))
-                  .rangeBands([20, Math.min(this.height, data.branches.length * 120)], .1);
+                  .rangeBands([50, Math.min(this.height, data.branches.length * 130)], .1);
 
     this.xScale = d3.scale.linear()
                    .domain([0, d3.max(data.commits, (x) => x.time)])
@@ -102,5 +102,30 @@ class BranchChart{
       .attr("cx", (commit) => this.xScale(commit.time))
       .attr("r", this.radius)
       .attr("fill", (commit) => this.branchColourScale(commit.branch));
+
+      var commitBox = this.chart
+                          .selectAll(".commit-box")
+                          .data(data.commits);
+      commitBox.exit().remove();
+      commitBox.enter()
+      .append("rect")
+      .attr("class", "commit-box");
+      commitBox.transition()
+      .attr("y", (commit) => this.yScale(commit.branch) - this.radius - 43)
+      .attr("x", (commit) => this.xScale(commit.time) - 75)
+      .attr("width", (commit) => commit.comment === undefined ? 0 : 150)
+      .attr("height", 40);
+
+      var commitLabels = this.chart
+      .selectAll(".commit-label").data(data.commits);
+      commitLabels.exit().remove();
+      commitLabels.enter()
+      .append("text")
+      .attr("class", "commit-label");
+      commitLabels.transition()
+      .attr("y", (commit) => this.yScale(commit.branch) - this.radius - 13)
+      .attr("x", (commit) => this.xScale(commit.time))
+      .attr("text-anchor", "middle")
+      .text((commit)=>commit.comment);
   }
 }
