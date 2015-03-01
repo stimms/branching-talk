@@ -3,6 +3,23 @@
 <meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,maximum-scale=1" />
 <title>Markdown Presenter</title>
 <style>
+.commit{
+  stroke: black;
+  stroke-width: 4px;
+
+}
+.edge{
+  stroke: black;
+  stroke-width: 4px;
+}
+  svg>text{
+    font-size: 18px;
+  }
+
+  svg{
+    margin-left: -150px;
+  }
+
   html, body {
   	margin:0;
   	border:0;
@@ -102,8 +119,8 @@
    }
  /* End styling */
 </style>
-<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.4/jquery.min.js"></script>
-<script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+<script src="bower_components/d3/d3.js" ></script>
+<script src="bower_components/jquery/dist/jquery.js" ></script>
 <script>
 if (!window.jQuery) {
     document.write('<script src="jquery.min.js"><\/script>');
@@ -191,6 +208,12 @@ Present.showSlide = function(slide) {
   $('.slideCount select').val(this.currentSlide);
   $('.slideProgress').css("width", (this.currentSlide + 1)/this.slides.length * 100 + "%");
   window.location.hash = '#' + (Present.currentSlide + 1);
+
+  var init = $view.find("[data-init]").attr("data-init");
+  if(init && init.length>0)
+  {
+    window[init].init();
+  }
 };
 Present.nextSlide = function() {
   if (Present.currentSlide < Present.slides.length-1) {
@@ -374,4 +397,10 @@ $('.slideCount select').change(function () {
     Present.showSlide(parseInt($(this).val()));
     setTimeout(function () { document.body.focus(); }, 0);
 });
+</script>
+
+<script src="diagrams.js" charset="utf-8"></script>
+<script src="mergeRebase.js" charset="utf-8"></script>
+<script>
+  var mergeRebase = new MergeRebase();
 </script>

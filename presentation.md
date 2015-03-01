@@ -76,6 +76,14 @@
 
 !
 
+<button data-action="rebase">Rebase</button>
+<button data-action="merge">Merge</button>
+<button data-action="reset">Reset</button>
+
+<div id="mergeRebase" data-init="mergeRebase"></div>
+
+!
+
 ## Local and remote branches
 
 - DVCS

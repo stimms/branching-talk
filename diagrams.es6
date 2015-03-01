@@ -36,6 +36,7 @@ class BranchChart{
 
   createEdges(data){
     var edges = this.chart.selectAll(".edge").data(data.commits, (d)=> d.branch + d.time);
+    edges.exit().remove();
     edges.enter()
           .append("line")
           .attr("class", "edge");
@@ -103,56 +104,3 @@ class BranchChart{
       .attr("fill", (commit) => this.branchColourScale(commit.branch));
   }
 }
-
-
-
-var chart = new BranchChart(document.getElementById("container"));
-var data = {
-  branches: [{ title:"develop"}, {title:"master"}],
-  commits: [
-  {
-    branch: "master",
-    time: 0,
-    comment: "some comment",
-    mergeTo: "develop"
-  },
-  {
-    branch: "master",
-    time: 4,
-    comment: "some comment"
-  },
-    {
-      branch: "develop",
-      time: 1,
-      comment: "some comment"
-    },
-    {
-      branch: "develop",
-      time: 2,
-      comment: "some comment"
-    },
-    {
-      branch: "develop",
-      time: 3,
-      comment: "some comment",
-      mergeTo: "master"
-    }
-  ]
-};
-var defaultData = jQuery.extend(true, {}, data);
-chart.init(data);
-
-$("[data-action=rebase]").click(()=>{
-  data.commits.forEach((d)=>{d.branch="master"; delete d.mergeTo;});
-  chart.addData(data);
-});
-$("[data-action=merge]").click(()=>{
-  var maxMaster = d3.max(data.commits, (d)=>d.time);
-  data.commits.forEach((d)=>{delete d.mergeTo;});
-  data.commits.filter((d)=>d.branch=="develop").forEach((d)=>{d.branch="master";  d.time=maxMaster+d.time;});
-  chart.addData(data);
-});
-$("[data-action=reset]").click(()=>{
-  data = jQuery.extend(true, {}, defaultData);
-  chart.addData(data);
-});

@@ -60,6 +60,7 @@ var BranchChart = (function () {
         var edges = this.chart.selectAll(".edge").data(data.commits, function (d) {
           return d.branch + d.time;
         });
+        edges.exit().remove();
         edges.enter().append("line").attr("class", "edge");
         edges.transition().attr("y1", function (commit) {
           return _this.yScale(commit.branch);
@@ -145,58 +146,3 @@ var BranchChart = (function () {
 
   return BranchChart;
 })();
-
-var chart = new BranchChart(document.getElementById("container"));
-var data = {
-  branches: [{ title: "develop" }, { title: "master" }],
-  commits: [{
-    branch: "master",
-    time: 0,
-    comment: "some comment",
-    mergeTo: "develop"
-  }, {
-    branch: "master",
-    time: 4,
-    comment: "some comment"
-  }, {
-    branch: "develop",
-    time: 1,
-    comment: "some comment"
-  }, {
-    branch: "develop",
-    time: 2,
-    comment: "some comment"
-  }, {
-    branch: "develop",
-    time: 3,
-    comment: "some comment",
-    mergeTo: "master"
-  }]
-};
-var defaultData = jQuery.extend(true, {}, data);
-chart.init(data);
-
-$("[data-action=rebase]").click(function () {
-  data.commits.forEach(function (d) {
-    d.branch = "master";delete d.mergeTo;
-  });
-  chart.addData(data);
-});
-$("[data-action=merge]").click(function () {
-  var maxMaster = d3.max(data.commits, function (d) {
-    return d.time;
-  });
-  data.commits.forEach(function (d) {
-    delete d.mergeTo;
-  });
-  data.commits.filter(function (d) {
-    return d.branch == "develop";
-  }).forEach(function (d) {
-    d.branch = "master";d.time = maxMaster + d.time;
-  });
-  chart.addData(data);
-});
-$("[data-action=reset]").click(function () {
-  data = jQuery.extend(true, {}, defaultData);
-  chart.addData(data);
-});
