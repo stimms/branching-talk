@@ -1,58 +1,65 @@
 class BranchChart{
   constructor(container){
-    this.container =container;
+    this.container = container;
   }
   init(data){
-
-    var width = window.innerWidth;
-    var height = window.innerHeight;
-    var chart = d3.select(this.container)
+    this.width = window.innerWidth;
+    this.height = window.innerHeight;
+    this.chart = d3.select(this.container)
     .append("svg")
-    .attr("height", height)
-    .attr("width", width);
+    .attr("height", this.height)
+    .attr("width", this.width);
 
-    var yScale = d3.scale.ordinal()
-                  .domain(data.branches)
-                  .rangeBands([20, Math.min(height, data.branches.length * 120)], .1);
+    this.yScale = d3.scale.ordinal()
+                  .domain(data.branches.map((d)=>d.title))
+                  .rangeBands([20, Math.min(this.height, data.branches.length * 120)], .1);
 
-    var xScale = d3.scale.linear()
+    this.xScale = d3.scale.linear()
                    .domain([0, d3.max(data.commits, (x) => x.time)])
-                   .range([100, width-100]);
+                   .range([100, this.width-100]);
+    this.branchColourScale = d3.scale.category10().domain(data.branches);
 
-    var branchColourScale = d3.scale.category10().domain(data.branches);
-
-    this.createEdges(chart, xScale, yScale, data);
-    this.createBranches(chart, yScale, data);
-    this.createCommits(chart, yScale, xScale, branchColourScale, data);
-
-
-
-
+    this.addData(data, true);
   }
 
-  createEdges(chart, xScale, yScale, data){
-    var edges = chart.selectAll(".edge").data(data.commits);
+  addData(data, transitions=false){
+    this.yScale.domain(data.branches.map((d)=>d.title));
+    this.xScale.domain([0, d3.max(data.commits, (x) => x.time)]);
+
+    this.branchColourScale.domain(data.branches);
+
+    this.createEdges(data);
+    this.createBranches(data);
+    this.createCommits(data, transitions);
+  }
+
+  createEdges(data){
+    var edges = this.chart.selectAll(".edge").data(data.commits, (d)=> d.branch + d.time);
     edges.enter()
           .append("line")
-          .attr("class", "edge")
-          .attr("y1", (commit) => yScale(commit.branch))
-          .attr("x1", (commit) => xScale(commit.time))
+          .attr("class", "edge");
+    edges.transition()
+          .attr("y1", (commit) => this.yScale(commit.branch))
+          .attr("x1", (commit) => this.xScale(commit.time))
           .attr("x2", (commit) => {
-            if(commit.time == d3.max(data.commits.filter((c)=>c.branch == commit.branch), (c) => c.time))
-              return xScale(commit.time);
-            return xScale(d3.min(data.commits.filter((c)=>c.branch == commit.branch && c.time > commit.time), (c) => c.time));
+            if(commit.time == d3.min(data.commits.filter((c)=>c.branch == commit.branch), (c) => c.time))
+              return this.xScale(commit.time);
+            return this.xScale(d3.max(data.commits.filter((c)=>c.branch == commit.branch && c.time < commit.time), (c) => c.time));
           })
-          .attr("y2", (commit) => yScale(commit.branch));
-    var mergeEdges = chart.selectAll(".merge-edge").data(data.commits.filter((c)=> c.mergeTo !== undefined));
+          .attr("y2", (commit) => this.yScale(commit.branch));
+
+
+    var mergeEdges = this.chart.selectAll(".merge-edge").data(data.commits.filter((c)=> c.mergeTo !== undefined));
     mergeEdges.enter()
           .append("path")
           .attr("class", "edge merge-edge")
-          .attr("fill", "rgba(255,255,255,0)")
+          .attr("fill", "rgba(255,255,255,0)");
+    mergeEdges.transition()
           .attr("d", (commit) => {
-                                  var startX = xScale(commit.time);
-                                  var endX = xScale(d3.min(data.commits.filter((c)=>c.time > commit.time), (c)=>c.time));
-                                  var startY = yScale(commit.branch);
-                                  var endY = yScale(commit.mergeTo);
+                                  var startX = this.xScale(commit.time);
+                                  var endX = this.xScale(d3.min(data.commits.filter((c)=>c.time > commit.time), (c)=>c.time));
+                                  var startY = this.yScale(commit.branch);
+                                  var endY = this.yScale(commit.mergeTo);
 
                               return "M" + startX + "," +  startY +
                                 " C" +
@@ -63,65 +70,76 @@ class BranchChart{
 
   }
 
-  createBranches(chart, yScale, data){
-    var branches = chart.selectAll(".branch").data(data.branches);
+  createBranches(data){
+    var branches = this.chart.selectAll(".branch").data(data.branches);
     branches.exit().remove();
     branches.enter()
       .append("text")
+      .attr("class", "branch");
+    branches.transition()
       .attr("x", 10)
-      .attr("y", (branch) => yScale(branch))
-      .text((branch)=>branch);
+      .attr("y", (branch) => this.yScale(branch.title))
+      .text((branch)=>branch.title);
   }
 
-  createCommits(chart, yScale, xScale, branchColourScale, data){
-    var commits = chart.selectAll(".commit").data(data.commits);
+  createCommits(data, transitions){
+    var commits = this.chart
+                    .selectAll(".commit").data(data.commits);
     commits.exit().remove();
     commits.enter()
       .append("circle")
       .attr("class","commit")
-      .attr("cy", (commit) => yScale(commit.branch))
-      .attr("cx", (commit) => xScale(commit.time))
+      .attr("cy", (commit) => this.yScale(commit.branch))
+      .attr("cx", (commit) => this.xScale(commit.time))
+      .attr("r",0);
+    commits.transition()
+    .delay((d)=> transitions ? d.time * 200 : 0)
+    .duration(500)
+      .attr("cy", (commit) => this.yScale(commit.branch))
+      .attr("cx", (commit) => this.xScale(commit.time))
       .attr("r", 25)
-      .attr("fill", (commit) => branchColourScale(commit.branch));
+      .attr("fill", (commit) => this.branchColourScale(commit.branch));
   }
 }
 
 
 
 var chart = new BranchChart(document.getElementById("container"));
-chart.init(
+var data = {
+  branches: [{ title:"develop"}, {title:"master"}],
+  commits: [
   {
-    branches: ["develop", "master"],
-    commits: [
+    branch: "master",
+    time: 0,
+    comment: "some comment",
+    mergeTo: "develop"
+  },
+  {
+    branch: "master",
+    time: 4,
+    comment: "some comment"
+  },
     {
-      branch: "master",
-      time: 0,
-      comment: "some comment",
-      mergeTo: "develop"
-    },
-    {
-      branch: "master",
-      time: 4,
+      branch: "develop",
+      time: 1,
       comment: "some comment"
-
     },
-      {
-        branch: "develop",
-        time: 1,
-        comment: "some comment"
-      },
-      {
-        branch: "develop",
-        time: 2,
-        comment: "some comment"
-      },
-      {
-        branch: "develop",
-        time: 3,
-        comment: "some comment",
-        mergeTo: "master"
-      }
-    ]
-  }
-
-);
+    {
+      branch: "develop",
+      time: 2,
+      comment: "some comment"
+    },
+    {
+      branch: "develop",
+      time: 3,
+      comment: "some comment",
+      mergeTo: "master"
+    },
+    {
+      branch: "master",
+      time: 3,
+      comment: "some comment"
+    }
+  ]
+};
+chart.init(data);
