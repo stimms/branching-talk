@@ -17,7 +17,7 @@ class BranchChart{
 
     this.xScale = d3.scale.linear()
                    .domain([0, d3.max(data.commits, (x) => x.time)])
-                   .range([100, this.width-100]);
+                   .range([120, this.width-150]);
     this.branchColourScale = d3.scale.category10().domain(data.branches);
 
     this.addData(data, true);
@@ -113,7 +113,7 @@ class BranchChart{
     .duration(500)
       .attr("cy", (commit) => this.yScale(commit.branch))
       .attr("cx", (commit) => this.xScale(commit.time))
-      .attr("r", (commit) => this.radius)
+      .attr("r", (commit) =>  this.selected ? this.radius * 1.4 : this.radius)
       .attr("fill", (commit) => this.branchColourScale(commit.branch));
       var commitBox = this.chart
                           .selectAll(".commit-box")

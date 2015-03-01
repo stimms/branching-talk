@@ -198,6 +198,12 @@
 
 !
 
+## Feature branches
+
+<div id="feature" data-init="feature"></div>
+
+!
+
 ## What do we build?
 
 - Everything!
@@ -238,6 +244,12 @@
 ## Features branches
 - Short lived
 - Self-stablized, fixes happen in that branch and not in a release branch
+
+!
+
+## Feature branches
+
+<div id="pullrequest" data-init="pullrequest"></div>
 
 !
 
