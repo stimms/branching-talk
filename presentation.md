@@ -170,11 +170,23 @@
 
 !
 
+## Release branches (release-*)
+
+<div id="release" data-init="release"></div>
+
+!
+
 ## Development (develop)
 
 - May or may not be ready for release
 - Holding branch for multiple features
 - No work done directly
+
+!
+
+## Development (develop-*)
+
+<div id="develop" data-init="develop"></div>
 
 !
 

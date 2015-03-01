@@ -87,22 +87,34 @@ class BranchChart{
 
   createCommits(data, transitions){
     var commits = this.chart
-                    .selectAll(".commit").data(data.commits);
+                    .selectAll(".commit").data(data.commits)
+                    ;
     commits.exit().remove();
     commits.enter()
       .append("circle")
       .attr("class","commit")
       .attr("cy", (commit) => this.yScale(commit.branch))
       .attr("cx", (commit) => this.xScale(commit.time))
-      .attr("r",0);
+      .attr("r",0)
+      .on("click", (commit)=>{
+        if(commit.selected)
+        {
+          commit.selected = false;
+          d3.select(d3.event.srcElement).transition().attr("r", this.radius);
+        }
+        else{
+          commit.selected = true;
+          d3.select(d3.event.srcElement).transition().attr("r", this.radius*1.4);
+        }
+
+      });
     commits.transition()
     .delay((d)=> transitions ? d.time * 200 : 0)
     .duration(500)
       .attr("cy", (commit) => this.yScale(commit.branch))
       .attr("cx", (commit) => this.xScale(commit.time))
-      .attr("r", this.radius)
+      .attr("r", (commit) => this.radius)
       .attr("fill", (commit) => this.branchColourScale(commit.branch));
-
       var commitBox = this.chart
                           .selectAll(".commit-box")
                           .data(data.commits);
