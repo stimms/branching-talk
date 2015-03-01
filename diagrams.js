@@ -58,18 +58,17 @@ var BranchChart = (function () {
         var mergeEdges = chart.selectAll(".merge-edge").data(data.commits.filter(function (c) {
           return c.mergeTo !== undefined;
         }));
-        mergeEdges.enter().append("line").attr("class", "edge merge-edge").attr("y1", function (commit) {
-          return yScale(commit.branch);
-        }).attr("x1", function (commit) {
-          return xScale(commit.time);
-        }).attr("x2", function (commit) {
-          return xScale(d3.min(data.commits.filter(function (c) {
+        mergeEdges.enter().append("path").attr("class", "edge merge-edge").attr("fill", "rgba(255,255,255,0)").attr("d", function (commit) {
+          var startX = xScale(commit.time);
+          var endX = xScale(d3.min(data.commits.filter(function (c) {
             return c.time > commit.time;
           }), function (c) {
             return c.time;
           }));
-        }).attr("y2", function (commit) {
-          return yScale(commit.mergeTo);
+          var startY = yScale(commit.branch);
+          var endY = yScale(commit.mergeTo);
+
+          return "M" + startX + "," + startY + " C" + (endX + (startX - endX) / 2) + "," + startY + " " + (endX + (startX - endX) / 2) + "," + endY + " " + endX + "," + endY;
         });
       },
       writable: true,

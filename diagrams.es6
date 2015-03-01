@@ -45,14 +45,21 @@ class BranchChart{
           .attr("y2", (commit) => yScale(commit.branch));
     var mergeEdges = chart.selectAll(".merge-edge").data(data.commits.filter((c)=> c.mergeTo !== undefined));
     mergeEdges.enter()
-          .append("line")
+          .append("path")
           .attr("class", "edge merge-edge")
-          .attr("y1", (commit) => yScale(commit.branch))
-          .attr("x1", (commit) => xScale(commit.time))
-          .attr("x2", (commit) => {
-            return xScale(d3.min(data.commits.filter((c)=>c.time > commit.time), (c) => c.time));
-          })
-          .attr("y2", (commit) => yScale(commit.mergeTo));
+          .attr("fill", "rgba(255,255,255,0)")
+          .attr("d", (commit) => {
+                                  var startX = xScale(commit.time);
+                                  var endX = xScale(d3.min(data.commits.filter((c)=>c.time > commit.time), (c)=>c.time));
+                                  var startY = yScale(commit.branch);
+                                  var endY = yScale(commit.mergeTo);
+
+                              return "M" + startX + "," +  startY +
+                                " C" +
+                                (endX+(startX - endX)/2) + "," + startY + " " +
+                                (endX+(startX - endX)/2) + "," + endY + " " +
+                                endX +"," + endY;
+                              });
 
   }
 
