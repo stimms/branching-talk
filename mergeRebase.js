@@ -73,3 +73,5 @@ var MergeRebase = (function () {
 
   return MergeRebase;
 })();
+
+var mergeRebase = new MergeRebase();

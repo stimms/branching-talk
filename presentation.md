@@ -141,11 +141,24 @@
 
 !
 
+## Master (master)
+
+<div id="master" data-init="master"></div>
+
+!
+
+
 ## Hotfix (hotfix-*)
 
 - Very small, perhaps only a single commit
 - Used to fix critical issues between releases
 - Merged to multiple locations
+
+!
+
+## Hotfix
+
+<div id="hotfix" data-init="hotfix"></div>
 
 !
 

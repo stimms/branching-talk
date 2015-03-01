@@ -15,9 +15,7 @@ gulp.task("build-es6", function(){
           }
         }))
         .pipe(babel())
-        .pipe(rename(function(path){
-                  path.extname=".js"
-        }))
+        .pipe(concat("charts.js"))
         .pipe(gulp.dest("."));
 });
 

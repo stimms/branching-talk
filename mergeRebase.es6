@@ -51,3 +51,4 @@ class MergeRebase{
     });
   }
 }
+var mergeRebase = new MergeRebase();
