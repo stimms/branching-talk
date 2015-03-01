@@ -16,6 +16,7 @@ var BranchChart = (function () {
       value: function init(data) {
         this.width = window.innerWidth;
         this.height = window.innerHeight;
+        this.radius = 26;
         this.chart = d3.select(this.container).append("svg").attr("height", this.height).attr("width", this.width);
 
         this.yScale = d3.scale.ordinal().domain(data.branches.map(function (d) {
@@ -63,18 +64,18 @@ var BranchChart = (function () {
         edges.transition().attr("y1", function (commit) {
           return _this.yScale(commit.branch);
         }).attr("x1", function (commit) {
-          return _this.xScale(commit.time);
+          return _this.xScale(commit.time) - _this.radius;
         }).attr("x2", function (commit) {
           if (commit.time == d3.min(data.commits.filter(function (c) {
             return c.branch == commit.branch;
           }), function (c) {
             return c.time;
-          })) return _this.xScale(commit.time);
+          })) return _this.xScale(commit.time) - _this.radius;
           return _this.xScale(d3.max(data.commits.filter(function (c) {
             return c.branch == commit.branch && c.time < commit.time;
           }), function (c) {
             return c.time;
-          }));
+          })) + _this.radius;
         }).attr("y2", function (commit) {
           return _this.yScale(commit.branch);
         });
@@ -82,14 +83,15 @@ var BranchChart = (function () {
         var mergeEdges = this.chart.selectAll(".merge-edge").data(data.commits.filter(function (c) {
           return c.mergeTo !== undefined;
         }));
+        mergeEdges.exit().remove();
         mergeEdges.enter().append("path").attr("class", "edge merge-edge").attr("fill", "rgba(255,255,255,0)");
         mergeEdges.transition().attr("d", function (commit) {
-          var startX = _this.xScale(commit.time);
+          var startX = _this.xScale(commit.time) + _this.radius;
           var endX = _this.xScale(d3.min(data.commits.filter(function (c) {
             return c.time > commit.time;
           }), function (c) {
             return c.time;
-          }));
+          })) - _this.radius;
           var startY = _this.yScale(commit.branch);
           var endY = _this.yScale(commit.mergeTo);
 
@@ -132,7 +134,7 @@ var BranchChart = (function () {
           return _this.yScale(commit.branch);
         }).attr("cx", function (commit) {
           return _this.xScale(commit.time);
-        }).attr("r", 25).attr("fill", function (commit) {
+        }).attr("r", this.radius).attr("fill", function (commit) {
           return _this.branchColourScale(commit.branch);
         });
       },
@@ -169,10 +171,32 @@ var data = {
     time: 3,
     comment: "some comment",
     mergeTo: "master"
-  }, {
-    branch: "master",
-    time: 3,
-    comment: "some comment"
   }]
 };
+var defaultData = jQuery.extend(true, {}, data);
 chart.init(data);
+
+$("[data-action=rebase]").click(function () {
+  data.commits.forEach(function (d) {
+    d.branch = "master";delete d.mergeTo;
+  });
+  chart.addData(data);
+});
+$("[data-action=merge]").click(function () {
+  var maxMaster = d3.max(data.commits, function (d) {
+    return d.time;
+  });
+  data.commits.forEach(function (d) {
+    delete d.mergeTo;
+  });
+  data.commits.filter(function (d) {
+    return d.branch == "develop";
+  }).forEach(function (d) {
+    d.branch = "master";d.time = maxMaster + d.time;
+  });
+  chart.addData(data);
+});
+$("[data-action=reset]").click(function () {
+  data = jQuery.extend(true, {}, defaultData);
+  chart.addData(data);
+});
