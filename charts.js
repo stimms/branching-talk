@@ -157,9 +157,13 @@ var _prototypeProperties = function (child, staticProps, instanceProps) { if (st
 var _classCallCheck = function (instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } };
 
 var BranchChart = (function () {
-  function BranchChart(container) {
+  function BranchChart(container, options) {
     _classCallCheck(this, BranchChart);
 
+    this.options = {
+      edgeTransitions: true
+    };
+    this.options = $.extend(this.options, options);
     this.container = container;
   }
 
@@ -213,8 +217,12 @@ var BranchChart = (function () {
           return d.branch + d.time;
         });
         edges.exit().remove();
-        edges.enter().append("line").attr("class", "edge");
-        edges.transition().attr("y1", function (commit) {
+        edges.enter().append("line").attr("class", "edge").attr("opacity", 0);
+        edges.transition().attr("opacity", 0).delay(function () {
+          return _this.options.edgeTransitions ? d3.max(data.commits, function (d) {
+            return d.time;
+          }) + 1 * 1500 : 0;
+        }).duration(200).attr("y1", function (commit) {
           return _this.yScale(commit.branch);
         }).attr("x1", function (commit) {
           return _this.xScale(commit.time) - _this.radius;
@@ -231,14 +239,30 @@ var BranchChart = (function () {
           })) + _this.radius;
         }).attr("y2", function (commit) {
           return _this.yScale(commit.branch);
-        });
+        }).attr("opacity", 1);
 
-        var mergeEdges = this.chart.selectAll(".merge-edge").data(data.commits.filter(function (c) {
+        var edgeNodes = [];
+        var tempEdgeNodes = data.commits.filter(function (c) {
           return c.mergeTo !== undefined;
-        }));
+        });
+        for (var i = 0; i < tempEdgeNodes.length; i++) {
+          if (tempEdgeNodes[i].mergeTo.constructor === Array) {
+            for (var j = 0; j < tempEdgeNodes[i].mergeTo.length; j++) {
+              var edge = $.extend({}, tempEdgeNodes[i]);
+              edge.mergeTo = tempEdgeNodes[i].mergeTo[j];
+              edgeNodes.push(edge);
+            }
+          } else edgeNodes.push(tempEdgeNodes[i]);
+        }
+        var mergeEdges = this.chart.selectAll(".merge-edge").data(edgeNodes);
+
         mergeEdges.exit().remove();
         mergeEdges.enter().append("path").attr("class", "edge merge-edge").attr("fill", "rgba(255,255,255,0)");
-        mergeEdges.transition().attr("d", function (commit) {
+        mergeEdges.transition().delay(function () {
+          return _this.options.edgeTransitions ? d3.max(data.commits, function (d) {
+            return d.time;
+          }) + 1 * 1500 : 0;
+        }).attr("d", function (commit) {
           var startX = _this.xScale(commit.time) + _this.radius;
           var endX = _this.xScale(d3.min(data.commits.filter(function (c) {
             return c.time > commit.time;
@@ -477,6 +501,109 @@ var _prototypeProperties = function (child, staticProps, instanceProps) { if (st
 
 var _classCallCheck = function (instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } };
 
+var HydraFeature = (function () {
+  function HydraFeature() {
+    _classCallCheck(this, HydraFeature);
+  }
+
+  _prototypeProperties(HydraFeature, null, {
+    init: {
+      value: function init() {
+        var chart = new BranchChart(document.getElementById("hydraFeature"));
+        var data = {
+          branches: [{ title: "8.0_master" }, { title: "password-reset" }, { title: "8.1_master" }],
+          commits: [{
+            branch: "8.0_master",
+            time: 0,
+            comment: "Release 8.0",
+            mergeTo: "password-reset"
+          }, {
+            branch: "password-reset",
+            time: 1
+          }, {
+            branch: "password-reset",
+            time: 2
+          }, {
+            branch: "password-reset",
+            time: 3,
+            mergeTo: "8.1_master"
+          }, {
+            branch: "8.1_master",
+            time: 4
+          }]
+        };
+        var defaultData = jQuery.extend(true, {}, data);
+        chart.init(data);
+      },
+      writable: true,
+      configurable: true
+    }
+  });
+
+  return HydraFeature;
+})();
+
+var hydraFeature = new HydraFeature();
+"use strict";
+
+var _prototypeProperties = function (child, staticProps, instanceProps) { if (staticProps) Object.defineProperties(child, staticProps); if (instanceProps) Object.defineProperties(child.prototype, instanceProps); };
+
+var _classCallCheck = function (instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } };
+
+var HydraFix = (function () {
+  function HydraFix() {
+    _classCallCheck(this, HydraFix);
+  }
+
+  _prototypeProperties(HydraFix, null, {
+    init: {
+      value: function init() {
+        var chart = new BranchChart(document.getElementById("hydraFix"));
+        var data = {
+          branches: [{ title: "8.0_master" }, { title: "fix-for-7" }, { title: "8.1_master" }],
+          commits: [{
+            branch: "8.1_master",
+            time: 0 }, {
+            branch: "8.0_master",
+            time: 0,
+            comment: "Release 8.0",
+            mergeTo: "fix-for-7"
+          }, {
+            branch: "fix-for-7",
+            time: 1
+          }, {
+            branch: "fix-for-7",
+            time: 2
+          }, {
+            branch: "fix-for-7",
+            time: 3,
+            mergeTo: ["8.1_master", "8.0_master"]
+          }, {
+            branch: "8.1_master",
+            time: 4
+          }, {
+            branch: "8.0_master",
+            time: 4
+          }]
+        };
+        var defaultData = jQuery.extend(true, {}, data);
+        chart.init(data);
+      },
+      writable: true,
+      configurable: true
+    }
+  });
+
+  return HydraFix;
+})();
+
+var hydraFix = new HydraFix();
+"use strict";
+
+var _prototypeProperties = function (child, staticProps, instanceProps) { if (staticProps) Object.defineProperties(child, staticProps); if (instanceProps) Object.defineProperties(child.prototype, instanceProps); };
+
+var _classCallCheck = function (instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } };
+
 var Master = (function () {
   function Master() {
     _classCallCheck(this, Master);
@@ -532,7 +659,7 @@ var MergeRebase = (function () {
   _prototypeProperties(MergeRebase, null, {
     init: {
       value: function init() {
-        var chart = new BranchChart(document.getElementById("mergeRebase"));
+        var chart = new BranchChart(document.getElementById("mergeRebase"), { edgeTransitions: false });
         var data = {
           branches: [{ title: "develop" }, { title: "master" }],
           commits: [{
@@ -684,6 +811,105 @@ var _prototypeProperties = function (child, staticProps, instanceProps) { if (st
 
 var _classCallCheck = function (instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } };
 
+var PatchBranch = (function () {
+  function PatchBranch() {
+    _classCallCheck(this, PatchBranch);
+  }
+
+  _prototypeProperties(PatchBranch, null, {
+    init: {
+      value: function init() {
+        var chart = new BranchChart(document.getElementById("patchBranch"));
+        var data = {
+          branches: [{ title: "8.0_master" }, { title: "8.0_patch1" }],
+          commits: [{
+            branch: "8.0_master",
+            time: 0,
+            comment: "Release 8.0.1"
+          }, {
+            branch: "8.0_patch1",
+            time: 1,
+            comment: "Fix for #3"
+          }, {
+            branch: "8.0_patch1",
+            time: 2,
+            comment: "Fix for #5"
+          }, {
+            branch: "8.0_patch1",
+            time: 3,
+            comment: "Fix for #8",
+            mergeTo: "8.0_master"
+          }, {
+            branch: "8.0_master",
+            time: 4,
+            comment: "Release 8.0.1"
+          }]
+        };
+        var defaultData = jQuery.extend(true, {}, data);
+        chart.init(data);
+      },
+      writable: true,
+      configurable: true
+    }
+  });
+
+  return PatchBranch;
+})();
+
+var patchBranch = new PatchBranch();
+"use strict";
+
+var _prototypeProperties = function (child, staticProps, instanceProps) { if (staticProps) Object.defineProperties(child, staticProps); if (instanceProps) Object.defineProperties(child.prototype, instanceProps); };
+
+var _classCallCheck = function (instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } };
+
+var VersionMaster = (function () {
+  function VersionMaster() {
+    _classCallCheck(this, VersionMaster);
+  }
+
+  _prototypeProperties(VersionMaster, null, {
+    init: {
+      value: function init() {
+        var chart = new BranchChart(document.getElementById("versionMaster"));
+        var data = {
+          branches: [{ title: "8.0_master" }],
+          commits: [{
+            branch: "8.0_master",
+            time: 0,
+            comment: "Release 8.0.1"
+          }, {
+            branch: "8.0_master",
+            time: 1,
+            comment: "Release 8.0.2"
+          }, {
+            branch: "8.0_master",
+            time: 2,
+            comment: "Release 8.0.3"
+          }, {
+            branch: "8.0_master",
+            time: 3,
+            comment: "Release 8.0.4"
+          }]
+        };
+        var defaultData = jQuery.extend(true, {}, data);
+        chart.init(data);
+      },
+      writable: true,
+      configurable: true
+    }
+  });
+
+  return VersionMaster;
+})();
+
+var versionMaster = new VersionMaster();
+"use strict";
+
+var _prototypeProperties = function (child, staticProps, instanceProps) { if (staticProps) Object.defineProperties(child, staticProps); if (instanceProps) Object.defineProperties(child.prototype, instanceProps); };
+
+var _classCallCheck = function (instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } };
+
 var PullRequest = (function () {
   function PullRequest() {
     _classCallCheck(this, PullRequest);
@@ -816,3 +1042,50 @@ var Release = (function () {
 })();
 
 var release = new Release();
+"use strict";
+
+var _prototypeProperties = function (child, staticProps, instanceProps) { if (staticProps) Object.defineProperties(child, staticProps); if (instanceProps) Object.defineProperties(child.prototype, instanceProps); };
+
+var _classCallCheck = function (instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } };
+
+var VersionMaster = (function () {
+  function VersionMaster() {
+    _classCallCheck(this, VersionMaster);
+  }
+
+  _prototypeProperties(VersionMaster, null, {
+    init: {
+      value: function init() {
+        var chart = new BranchChart(document.getElementById("versionMaster"));
+        var data = {
+          branches: [{ title: "8.0_master" }],
+          commits: [{
+            branch: "8.0_master",
+            time: 0,
+            comment: "Release 8.0.1"
+          }, {
+            branch: "8.0_master",
+            time: 1,
+            comment: "Release 8.0.2"
+          }, {
+            branch: "8.0_master",
+            time: 2,
+            comment: "Release 8.0.3"
+          }, {
+            branch: "8.0_master",
+            time: 3,
+            comment: "Release 8.0.4"
+          }]
+        };
+        var defaultData = jQuery.extend(true, {}, data);
+        chart.init(data);
+      },
+      writable: true,
+      configurable: true
+    }
+  });
+
+  return VersionMaster;
+})();
+
+var versionMaster = new VersionMaster();

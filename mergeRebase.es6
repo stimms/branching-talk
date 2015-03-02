@@ -1,6 +1,6 @@
 class MergeRebase{
    init(){
-    var chart = new BranchChart(document.getElementById("mergeRebase"));
+    var chart = new BranchChart(document.getElementById("mergeRebase"), {edgeTransitions: false});
     var data = {
       branches: [{ title:"develop"}, {title:"master"}],
       commits: [

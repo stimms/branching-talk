@@ -1,5 +1,9 @@
 class BranchChart{
-  constructor(container){
+  constructor(container, options){
+    this.options = {
+      edgeTransitions: true
+    };
+    this.options = $.extend(this.options, options);
     this.container = container;
   }
   init(data){
@@ -39,8 +43,12 @@ class BranchChart{
     edges.exit().remove();
     edges.enter()
           .append("line")
-          .attr("class", "edge");
+          .attr("class", "edge")
+          .attr("opacity", 0);
     edges.transition()
+          .attr("opacity", 0)
+          .delay(()=>  this.options.edgeTransitions ? d3.max(data.commits, (d)=>d.time) + 1 * 1500 : 0)
+          .duration(200)
           .attr("y1", (commit) => this.yScale(commit.branch))
           .attr("x1", (commit) => this.xScale(commit.time)-this.radius)
           .attr("x2", (commit) => {
@@ -48,16 +56,34 @@ class BranchChart{
               return this.xScale(commit.time)-this.radius;
             return this.xScale(d3.max(data.commits.filter((c)=>c.branch == commit.branch && c.time < commit.time), (c) => c.time))+this.radius;
           })
-          .attr("y2", (commit) => this.yScale(commit.branch));
+          .attr("y2", (commit) => this.yScale(commit.branch))
+          .attr("opacity", 1);
 
+    var edgeNodes = [];
+    var tempEdgeNodes = data.commits.filter((c)=> c.mergeTo !== undefined);
+    for(var i = 0; i<tempEdgeNodes.length;i++)
+    {
+      if(tempEdgeNodes[i].mergeTo.constructor === Array)
+      {
+        for(var j = 0; j<tempEdgeNodes[i].mergeTo.length; j++)
+        {
+          var edge = $.extend({},tempEdgeNodes[i]);
+          edge.mergeTo = tempEdgeNodes[i].mergeTo[j];
+          edgeNodes.push(edge);
+        }
+      }
+      else
+        edgeNodes.push(tempEdgeNodes[i]);
+    }
+    var mergeEdges = this.chart.selectAll(".merge-edge").data(edgeNodes);
 
-    var mergeEdges = this.chart.selectAll(".merge-edge").data(data.commits.filter((c)=> c.mergeTo !== undefined));
     mergeEdges.exit().remove();
     mergeEdges.enter()
           .append("path")
           .attr("class", "edge merge-edge")
           .attr("fill", "rgba(255,255,255,0)");
     mergeEdges.transition()
+          .delay(()=> this.options.edgeTransitions ? d3.max(data.commits, (d)=>d.time) + 1 * 1500 : 0)
           .attr("d", (commit) => {
                                   var startX = this.xScale(commit.time)+this.radius;
                                   var endX = this.xScale(d3.min(data.commits.filter((c)=>c.time > commit.time), (c)=>c.time))-this.radius;
@@ -87,8 +113,7 @@ class BranchChart{
 
   createCommits(data, transitions){
     var commits = this.chart
-                    .selectAll(".commit").data(data.commits)
-                    ;
+                    .selectAll(".commit").data(data.commits);
     commits.exit().remove();
     commits.enter()
       .append("circle")

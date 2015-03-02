@@ -292,11 +292,23 @@
 
 !
 
+## Version master (8.0_master)
+
+<div id="versionMaster" data-init="versionMaster"></div>
+
+!
+
 ## Patch branch
 
 - Contains a number of fixes to be applied to a master
 - Released as a collection of binaries
 - Strongly related to a version master
+
+!
+
+## Patch branch
+
+<div id="patchBranch" data-init="patchBranch"></div>
 
 !
 
@@ -308,11 +320,24 @@
 
 !
 
+## Fix branches
+
+<div id="hydraFix" data-init="hydraFix"></div>
+
+!
+
 ## Features branches
 
 - Contain net-new features
 - Likely not merged into patches
 - Merged into a single version master
+
+!
+
+
+## Feature branches
+
+<div id="hydraFeature" data-init="hydraFeature"></div>
 
 !
 
