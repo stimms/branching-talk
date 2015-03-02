@@ -79,6 +79,83 @@ var _prototypeProperties = function (child, staticProps, instanceProps) { if (st
 
 var _classCallCheck = function (instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } };
 
+var DevStabilization = (function () {
+  function DevStabilization() {
+    _classCallCheck(this, DevStabilization);
+  }
+
+  _prototypeProperties(DevStabilization, null, {
+    init: {
+      value: function init() {
+        var chart = new BranchChart(document.getElementById("devstabilization"));
+        var data = {
+          branches: [{ title: "password-encryption" }, { title: "stabilization" }, { title: "password-reset" }, { title: "master" }],
+          commits: [{
+            branch: "master",
+            time: 0
+          }, {
+            branch: "password-encryption",
+            time: 0,
+            comment: "Adding password encryption"
+          }, {
+            branch: "password-encryption",
+            time: 1,
+            comment: "Applying fixes"
+          }, {
+            branch: "password-encryption",
+            time: 2,
+            comment: "Final cleanup",
+            mergeTo: "stabilization"
+          }, {
+            branch: "password-reset",
+            time: 1,
+            comment: "Adding password reset"
+          }, {
+            branch: "password-reset",
+            time: 2,
+            comment: "Jim's suggestions"
+          }, {
+            branch: "password-reset",
+            time: 3,
+            comment: "Final cleanup",
+            mergeTo: "stabilization"
+          }, {
+            branch: "master",
+            time: 5,
+            comment: "Ready for release"
+          }, {
+            branch: "stabilization",
+            time: 5
+          }, {
+            branch: "stabilization",
+            time: 0
+          }, {
+            branch: "stabilization",
+            time: 3
+          }, {
+            branch: "stabilization",
+            time: 4,
+            mergeTo: "master"
+          }]
+        };
+        var defaultData = jQuery.extend(true, {}, data);
+        chart.init(data);
+      },
+      writable: true,
+      configurable: true
+    }
+  });
+
+  return DevStabilization;
+})();
+
+var devstabilization = new DevStabilization();
+"use strict";
+
+var _prototypeProperties = function (child, staticProps, instanceProps) { if (staticProps) Object.defineProperties(child, staticProps); if (instanceProps) Object.defineProperties(child.prototype, instanceProps); };
+
+var _classCallCheck = function (instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } };
+
 var BranchChart = (function () {
   function BranchChart(container) {
     _classCallCheck(this, BranchChart);
@@ -96,11 +173,11 @@ var BranchChart = (function () {
 
         this.yScale = d3.scale.ordinal().domain(data.branches.map(function (d) {
           return d.title;
-        })).rangeBands([50, Math.min(this.height, data.branches.length * 130)], 0.1);
+        })).rangeBands([60, Math.min(this.height, data.branches.length * 130)], 0.1);
 
         this.xScale = d3.scale.linear().domain([0, d3.max(data.commits, function (x) {
           return x.time;
-        })]).range([120, this.width - 150]);
+        })]).range([220, this.width - 150]);
         this.branchColourScale = d3.scale.category10().domain(data.branches);
 
         this.addData(data, true);
@@ -229,9 +306,9 @@ var BranchChart = (function () {
         commitBox.transition().attr("y", function (commit) {
           return _this.yScale(commit.branch) - _this.radius - 43;
         }).attr("x", function (commit) {
-          return _this.xScale(commit.time) - 75;
-        }).attr("width", function (commit) {
-          return commit.comment === undefined ? 0 : 150;
+          return _this.xScale(commit.time) - 85;
+        }).attr("rx", 10).attr("ry", 10).attr("width", function (commit) {
+          return commit.comment === undefined ? 0 : 170;
         }).attr("height", 40);
 
         var commitLabels = this.chart.selectAll(".commit-label").data(data.commits);
@@ -524,6 +601,89 @@ var _prototypeProperties = function (child, staticProps, instanceProps) { if (st
 
 var _classCallCheck = function (instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } };
 
+var MultipleMasters = (function () {
+  function MultipleMasters() {
+    _classCallCheck(this, MultipleMasters);
+  }
+
+  _prototypeProperties(MultipleMasters, null, {
+    init: {
+      value: function init() {
+        var chart = new BranchChart(document.getElementById("multiplemasters"));
+        var data = {
+          branches: [{ title: "password-encryption" }, { title: "release-2.0" }, { title: "release-3.0" }, { title: "password-reset" }],
+          commits: [{
+            branch: "release-2.0",
+            time: 0
+          }, {
+            branch: "password-encryption",
+            time: 0,
+            comment: "Adding password encryption"
+          }, {
+            branch: "password-encryption",
+            time: 1,
+            comment: "Applying fixes"
+          }, {
+            branch: "password-encryption",
+            time: 2,
+            comment: "Final cleanup",
+            mergeTo: "release-2.0"
+          }, {
+            branch: "release-2.0",
+            time: 3,
+            comment: "Password Encryption"
+          }, {
+            branch: "password-reset",
+            time: 2,
+            comment: "Adding password reset"
+          }, {
+            branch: "password-reset",
+            time: 3,
+            comment: "Jim's suggestions"
+          }, {
+            branch: "password-reset",
+            time: 4,
+            comment: "Final cleanup",
+            mergeTo: "release-3.0"
+          }, {
+            branch: "release-2.0",
+            time: 4,
+            comment: "Security fix",
+            mergeTo: "release-3.0"
+          }, {
+            branch: "release-2.0",
+            time: 5,
+            mergeTo: "release-3.0"
+          }, {
+            branch: "release-3.0",
+            time: 1
+          }, {
+            branch: "release-3.0",
+            time: 3
+          }, {
+            branch: "release-3.0",
+            time: 5,
+            comment: "Password Reset"
+          }]
+        };
+        var defaultData = jQuery.extend(true, {}, data);
+        chart.init(data);
+      },
+      writable: true,
+      configurable: true
+    }
+  });
+
+  return MultipleMasters;
+})();
+
+var multiplemasters = new MultipleMasters();
+"use strict";
+
+var _prototypeProperties = function (child, staticProps, instanceProps) { if (staticProps) Object.defineProperties(child, staticProps); if (instanceProps) Object.defineProperties(child.prototype, instanceProps); };
+
+var _classCallCheck = function (instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } };
+
 var PullRequest = (function () {
   function PullRequest() {
     _classCallCheck(this, PullRequest);
@@ -536,6 +696,9 @@ var PullRequest = (function () {
         var data = {
           branches: [{ title: "password-encryption" }, { title: "master" }, { title: "password-reset" }],
           commits: [{
+            branch: "master",
+            time: 0
+          }, {
             branch: "password-encryption",
             time: 0,
             comment: "Adding password encryption"

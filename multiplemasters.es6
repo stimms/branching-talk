@@ -1,11 +1,11 @@
-class PullRequest{
+class MultipleMasters{
    init(){
-    var chart = new BranchChart(document.getElementById("pullrequest"));
+    var chart = new BranchChart(document.getElementById("multiplemasters"));
     var data = {
-      branches: [{title: "password-encryption"},{title:"master"},{title: "password-reset"}],
+      branches: [{title: "password-encryption"},{title:"release-2.0"},{title: "release-3.0"},{title: "password-reset"}],
       commits: [
       {
-        branch: "master",
+        branch: "release-2.0",
         time: 0
       },
       {
@@ -22,10 +22,10 @@ class PullRequest{
         branch: "password-encryption",
         time: 2,
         comment: "Final cleanup",
-        mergeTo: "master"
+        mergeTo: "release-2.0"
       },
       {
-        branch: "master",
+        branch: "release-2.0",
         time: 3,
         comment: "Password Encryption"
       },
@@ -43,15 +43,29 @@ class PullRequest{
         branch: "password-reset",
         time: 4,
         comment: "Final cleanup",
-        mergeTo: "master"
+        mergeTo: "release-3.0"
       },
       {
-        branch: "master",
+        branch: "release-2.0",
         time: 4,
-        comment: "Security fix"
+        comment: "Security fix",
+        mergeTo: "release-3.0"
       },
       {
-        branch: "master",
+        branch: "release-2.0",
+        time: 5,
+        mergeTo: "release-3.0"
+      },
+      {
+        branch: "release-3.0",
+        time: 1
+      },
+      {
+        branch: "release-3.0",
+        time: 3
+      },
+      {
+        branch: "release-3.0",
         time: 5,
         comment: "Password Reset"
       }
@@ -61,4 +75,4 @@ class PullRequest{
     chart.init(data);
   }
 }
-var pullrequest = new PullRequest();
+var multiplemasters = new MultipleMasters();

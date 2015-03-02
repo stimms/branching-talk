@@ -1,8 +1,8 @@
-class PullRequest{
+class DevStabilization{
    init(){
-    var chart = new BranchChart(document.getElementById("pullrequest"));
+    var chart = new BranchChart(document.getElementById("devstabilization"));
     var data = {
-      branches: [{title: "password-encryption"},{title:"master"},{title: "password-reset"}],
+      branches: [{title: "password-encryption"},{title:"stabilization"},{title: "password-reset"},{title: "master"}],
       commits: [
       {
         branch: "master",
@@ -22,38 +22,45 @@ class PullRequest{
         branch: "password-encryption",
         time: 2,
         comment: "Final cleanup",
-        mergeTo: "master"
-      },
-      {
-        branch: "master",
-        time: 3,
-        comment: "Password Encryption"
+        mergeTo: "stabilization"
       },
       {
         branch: "password-reset",
-        time: 2,
+        time: 1,
         comment: "Adding password reset"
       },
       {
         branch: "password-reset",
-        time: 3,
+        time: 2,
         comment: "Jim's suggestions"
       },
       {
         branch: "password-reset",
-        time: 4,
+        time: 3,
         comment: "Final cleanup",
-        mergeTo: "master"
-      },
-      {
-        branch: "master",
-        time: 4,
-        comment: "Security fix"
+        mergeTo: "stabilization"
       },
       {
         branch: "master",
         time: 5,
-        comment: "Password Reset"
+        comment: "Ready for release"
+      },
+      {
+        branch: "stabilization",
+        time: 5
+      },
+      {
+        branch: "stabilization",
+        time: 0
+      },
+      {
+        branch: "stabilization",
+        time: 3
+      },
+      {
+        branch: "stabilization",
+        time: 4,
+        mergeTo: "master"
       }
       ]
     };
@@ -61,4 +68,4 @@ class PullRequest{
     chart.init(data);
   }
 }
-var pullrequest = new PullRequest();
+var devstabilization = new DevStabilization();

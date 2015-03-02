@@ -266,6 +266,18 @@
 
 !
 
+## Multiple masters
+
+<div id="multiplemasters" data-init="multiplemasters"></div>
+
+!
+
+## Dev Stabilization
+
+
+<div id="devstabilization" data-init="devstabilization"></div>
+!
+
 ## Hydra
 - Sounds cool
 - Useful for libraries or components used in other systems
